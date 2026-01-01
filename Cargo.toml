@@ -1,0 +1,7 @@
+[package]
+name = "auditoria-shake128"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+sha3 = "0.10"
