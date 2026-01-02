@@ -5,6 +5,29 @@ use sha3::{
 use std::collections::HashMap;
 use std::time::Instant;
 
+/// Executa o ataque de colisão contra o SHAKE128.
+///
+/// O algoritmo gera mensagens sequenciais (`message_N`) e
+/// calcula seus hashes de 4 bytes.
+/// Cada hash é armazenado em um `HashMap`.
+///
+/// Quando um hash já existente é encontrado novamente,
+/// temos uma colisão.
+///
+/// ## Conceito criptográfico
+/// Quebra da **resistência a colisões**:
+/// encontrar `x ≠ y` tal que `H(x) = H(y)`.
+///
+/// ## Complexidade esperada
+/// Para um hash de *n* bits, a colisão ocorre em média após:
+/// ```text
+/// 2^(n/2)
+/// ```
+///
+/// Neste caso:
+/// ```text
+/// n = 32 bits → ~2^16 ≈ 65 mil tentativas
+/// ```
 pub fn run_challenge_a() {
     let start = Instant::now();
 
@@ -37,6 +60,13 @@ pub fn run_challenge_a() {
     }
 }
 
+/// Calcula o hash SHAKE128 com saída fixa de 4 bytes.
+///
+/// ## Parâmetros
+/// - `input`: bytes da mensagem de entrada
+///
+/// ## Retorno
+/// - Array de 4 bytes representando o hash truncado
 fn shake128_4bytes(input: &[u8]) -> [u8; 4] {
     let mut hasher = Shake128::default();
     hasher.update(input);
