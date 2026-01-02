@@ -1,3 +1,4 @@
+//! Programa principal do laboratório de segurança com SHAKE128.
 mod lab;
 
 use std::env;

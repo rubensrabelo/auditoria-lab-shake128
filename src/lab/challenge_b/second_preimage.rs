@@ -1,3 +1,4 @@
+//! Desafio B – Quebra da resistência à segunda pré-imagem usando SHAKE128.
 use sha3::{
     Shake128,
     digest::{Update, ExtendableOutput, XofReader},
@@ -9,6 +10,31 @@ use std::sync::{
 use std::thread;
 use std::time::Instant;
 
+/// Executa o ataque de segunda pré-imagem.
+///
+/// Dado um valor fixo `x₁`, o algoritmo tenta encontrar
+/// outro valor `x₂ ≠ x₁` tal que:
+///
+/// ```text
+/// H(x₁) = H(x₂)
+/// ```
+///
+/// O ataque é feito por força bruta e paralelizado
+/// utilizando múltiplas threads.
+///
+/// ## Conceito criptográfico
+/// Quebra da **resistência à segunda pré-imagem**.
+///
+/// ## Complexidade esperada
+/// Para um hash de *n* bits:
+/// ```text
+/// ~2^n tentativas
+/// ```
+///
+/// Neste caso:
+/// ```text
+/// n = 32 bits → ~4 bilhões de tentativas (pior caso)
+/// ```
 pub fn run_challenge_b() {
     let start = Instant::now();
 
@@ -76,6 +102,13 @@ pub fn run_challenge_b() {
     }
 }
 
+/// Calcula o hash SHAKE128 com saída fixa de 4 bytes.
+///
+/// ## Parâmetros
+/// - `input`: bytes da entrada
+///
+/// ## Retorno
+/// - Hash truncado de 4 bytes
 fn shake128_4bytes(input: &[u8]) -> [u8; 4] {
     let mut hasher = Shake128::default();
     hasher.update(input);

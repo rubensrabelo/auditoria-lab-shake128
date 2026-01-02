@@ -1,3 +1,4 @@
+//! Desafio A – Quebra da resistência a colisões usando SHAKE128.
 use sha3::{
     Shake128,
     digest::{Update, ExtendableOutput, XofReader},
