@@ -1,3 +1,4 @@
+//! Desafio C – Quebra da resistência à pré-imagem usando SHAKE128.
 use sha3::{
     Shake128,
     digest::{Update, ExtendableOutput, XofReader},
@@ -14,6 +15,29 @@ const TARGET_PREFIX: [u8; 4] = [0x79, 0x45, 0x52, 0x69];
 const EXTRA_BITS: u8 = 2;
 const EXTRA_BITS_VALUE: u8 = 0b01;
 
+/// Executa o ataque de pré-imagem.
+///
+/// O algoritmo tenta encontrar qualquer entrada `x` tal que:
+///
+/// ```text
+/// H(x) = h
+/// ```
+///
+/// onde `h` é conhecido apenas parcialmente (34 bits).
+///
+/// ## Conceito criptográfico
+/// Quebra da **resistência à pré-imagem**.
+///
+/// ## Complexidade esperada
+/// Para um hash de *n* bits:
+/// ```text
+/// ~2^n tentativas
+/// ```
+///
+/// Neste caso:
+/// ```text
+/// n = 34 bits → ~17 bilhões de tentativas (pior caso)
+/// ```
 pub fn run_challenge_c() {
     let start = Instant::now();
 
@@ -76,6 +100,13 @@ pub fn run_challenge_c() {
     }
 }
 
+/// Calcula o hash SHAKE128 com saída fixa de 5 bytes.
+///
+/// ## Parâmetros
+/// - `input`: bytes da senha candidata
+///
+/// ## Retorno
+/// - Array de 5 bytes do hash SHAKE128
 fn shake128_5bytes(input: &[u8]) -> [u8; 5] {
     let mut hasher = Shake128::default();
     hasher.update(input);
@@ -87,6 +118,12 @@ fn shake128_5bytes(input: &[u8]) -> [u8; 5] {
     output
 }
 
+/// Verifica se o hash corresponde ao alvo de 34 bits.
+///
+/// Condições:
+/// 1. Os primeiros 4 bytes devem ser iguais ao prefixo alvo
+/// 2. Os `EXTRA_BITS` mais significativos do quinto byte
+///    devem ter o valor esperado
 fn hash_matches(hash: &[u8; 5]) -> bool {
     if hash[..4] != TARGET_PREFIX {
         return false;
