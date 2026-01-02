@@ -2,6 +2,17 @@ mod lab;
 
 use std::env;
 
+/// Função principal do programa.
+///
+/// Lê os argumentos da linha de comando e decide
+/// qual desafio criptográfico será executado.
+///
+/// ## Uso
+/// ```bash
+/// cargo run --release a
+/// cargo run --release b
+/// cargo run --release c
+/// ```
 fn main() {
     let args: Vec<String> = env::args().collect();
 
